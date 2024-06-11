@@ -21,21 +21,8 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias do MERN Stack:
 #
 
 * [Link do Figma](https://www.figma.com/design/upeca8mujZWwCFv3OPGC3b/WPP--NEWS-NETWORKS?node-id=0-1) ✏️
-* [Link do Projeto]() 🚀
-* [Link da API](https://github.com/WILLOSU/WPP-Backend) 🔧
+* [Link da Página WEB](https://wpp-news-network-spa.vercel.app) 🚀
+* [Link do Backend](https://github.com/WILLOSU/WPP-NEWS-NETWORK---API) 🔧
 
-## Tela de Cadastro
-<img src="" width="500" heigth="500"/>
-
-## Tela de Login
-<img src="" width="500" heigth="500"/>
-
-## Tela inicial e de perfil  do usuário
-<img src="" width="600" heigth="600"/>
-<img src="" width="600" heigth="600"/>
-
-
-### Breve fluxo da aplicação:
-![WPP NEWS NET WORK]()
 
 
