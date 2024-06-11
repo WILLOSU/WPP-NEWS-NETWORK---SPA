@@ -19,7 +19,7 @@ const CustomButton = styled.button`
     bottom: ${isAbsolute && "0"};
     right: ${isAbsolute && "0"};
     margin: ${isAbsolute && "0.7rem"};
-    padding: ${isAbsolute && "0.5rem"};
+    padding: ${isAbsolute && "0.7rem"};
     background-color: ${withOutColor ? "none" : "#003780"};
     padding: ${withOutColor && "0.3rem .5rem"};
     color: ${withOutColor && "#003780"};
