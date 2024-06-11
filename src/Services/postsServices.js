@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000/news";
-const baseUrl = "";
+const baseUrl = "https://wpp-news-network-api.onrender.com/news";
 
 export const getAllNewsService = async (offset, limit) => {
   try {
