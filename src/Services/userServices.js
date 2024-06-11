@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000/news";
-const baseUrl = "";
+const baseUrl = "https://wpp-news-network-api.onrender.com/user";
 
 export const createUserService = (user) => {
   const response = fetch(`${baseUrl}`, {
