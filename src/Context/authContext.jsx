@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserService } from "../Services/userServices";
 
-const routeAuth = "https://willnews-api.onrender.com/doc/";
+const routeAuth = "https://wpp-news-network-api.onrender.com";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
