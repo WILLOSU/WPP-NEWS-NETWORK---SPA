@@ -12,6 +12,8 @@ export const Grid = styled.div`
   left: 0;
   z-index: 1000;
 
+  text-align: justify; /* Adicionado para justificar o texto */
+
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
   }

@@ -67,6 +67,8 @@ export function CreateNews({ open, setOpen }) {
               name="title"
               onChange={handleInputChange}
             />
+
+            
             <Input
               icon={<Link />}
               type="text"
@@ -74,12 +76,16 @@ export function CreateNews({ open, setOpen }) {
               name="banner"
               onChange={handleInputChange}
             />
+
+             
+
             <S.TextArea
               name="text"
               cols="40"
               rows="5"
               placeholder="Texto"
               onChange={handleInputChange}
+              
             />
             <ErrorMessage>{errorMessage}</ErrorMessage>
             <Button onClick={createNewNews}>

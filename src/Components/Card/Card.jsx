@@ -43,9 +43,13 @@ export function Card({
               <span>{comments?.length}</span>
             </section>
           </CardFooter>
+
+          {/*
         </div>
 
-        <img src={banner} alt="Imagem" />
+       <img src={banner} alt="Imagem" />
+       
+       */}
       </CardBody>
     </CardContainer>
   );

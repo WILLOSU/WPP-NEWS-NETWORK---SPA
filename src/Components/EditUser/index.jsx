@@ -76,6 +76,7 @@ export function EditUser({ open, setOpen }) {
               onChange={handleInputToEditDataUser}
               value={userData.email}
             />
+           
             <Input
               icon={<Link />}
               type="text"
@@ -84,6 +85,7 @@ export function EditUser({ open, setOpen }) {
               onChange={handleInputToEditDataUser}
               value={userData.background}
             />
+           
             <Input
               icon={<Link />}
               type="text"
@@ -92,6 +94,8 @@ export function EditUser({ open, setOpen }) {
               onChange={handleInputToEditDataUser}
               value={userData.avatar}
             />
+
+            
             <Button onClick={editUser} disabled={isLoading}>
               {isLoading ? <ClipLoader color="#fff" size={14} /> : "Atualizar"}
             </Button>

@@ -10,6 +10,8 @@ export const ProfileBody = styled.section`
   gap: 1.5rem;
   position: relative;
 
+  text-align: justify; /* Adicionado para justificar o texto */
+
   @media (max-width: 650px) {
     max-width: 95%;
     width: 100%;

@@ -9,6 +9,8 @@ const Wrapper = styled.div`
   z-index: 450;
   margin: 1rem 0;
 
+  text-align: justify; /* Adicionado para justificar o texto */
+
   display: flex;
   justify-content: center;
   align-items: center;

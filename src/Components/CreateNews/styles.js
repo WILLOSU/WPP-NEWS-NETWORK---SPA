@@ -40,6 +40,8 @@ export const TextArea = styled.textarea`
   border-radius: 0.4rem;
   border: 1px solid transparent;
 
+  text-align: justify; /* Adicionado para justificar o texto */
+
   ::placeholder {
     font-size: 0.8rem;
   }

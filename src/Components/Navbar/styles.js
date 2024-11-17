@@ -4,6 +4,7 @@ export const Wrapper = styled.nav`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  text-align: justify; /* Adicionado para justificar o texto */
   align-items: center;
 
   position: fixed;

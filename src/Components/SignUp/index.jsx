@@ -22,8 +22,8 @@ export function NewAccount() {
     username: "",
     email: "",
     password: "",
-    avatar: "",
-    background: "",
+    //avatar: "",
+    //background: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -127,6 +127,8 @@ export function NewAccount() {
           name="email"
           placeholder="E-mail *"
         />
+
+         {/* 
         <Input
           onInput={handleChange}
           icon={<LinkIcon />}
@@ -141,6 +143,9 @@ export function NewAccount() {
           name="background"
           placeholder="Background"
         />
+        */}
+        
+
         <div style={{ position: "relative" }}>
           <Input
             onInput={handleChange}

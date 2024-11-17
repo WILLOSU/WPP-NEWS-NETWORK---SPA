@@ -11,6 +11,8 @@ export const Wrapper = styled.div`
     flex-direction: column;
     overflow: hidden;
 
+    text-align: justify; /* Adicionado para justificar o texto */
+
     position: fixed;
     top: 0;
 
