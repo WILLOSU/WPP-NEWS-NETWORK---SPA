@@ -21,7 +21,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias do MERN Stack:
 #
 
 * [Link do Figma](https://www.figma.com/design/upeca8mujZWwCFv3OPGC3b/WPP--NEWS-NETWORKS?node-id=0-1) ✏️
-* [Link da Página WEB](https://wpp-news-network-spa.vercel.app) 🚀
+* [Link da Página WEB](https://https://wppnews.vercel.app/) 🚀
 * [Link do Backend](https://github.com/WILLOSU/WPP-NEWS-NETWORK---API) 🔧
 
 
