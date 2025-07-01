@@ -5,7 +5,7 @@ import { Container, HomeBody } from "./styles"
 import { useCallback, useEffect, useState } from "react"
 import { ClipLoader } from "react-spinners"
 import { ShowMore } from "../../Components/ShowMore"
-import { getAllNewsService } from "../../Services/postsServices" // VOLTOU: só notícias publicadas
+import { getAllNewsService } from "../../Services/postsServices" 
 import { useAuth } from "../../Context/authContext"
 
 export function Home() {
@@ -20,23 +20,22 @@ export function Home() {
   const getAllNews = useCallback(
     async (_offset = 0) => {
       try {
-        // HOME: sempre busca apenas notícias publicadas (para todos)
+       
         const response = await getAllNewsService(_offset, limit)
 
-        console.log("DEBUG HOME - Response status:", response.status)
+  
 
         if (!response.ok) {
-          console.error("DEBUG HOME - Erro na resposta:", response.status, response.statusText)
+ 
           throw new Error(`Erro na API: ${response.status}`)
         }
 
         const data = await response.json()
-        console.log("DEBUG HOME - Data recebida:", data)
-        console.log("DEBUG HOME - Quantidade de notícias:", data.results?.length)
+ 
 
         return data.results || []
       } catch (error) {
-        console.error("DEBUG HOME - Erro no getAllNews:", error)
+
         return []
       }
     },

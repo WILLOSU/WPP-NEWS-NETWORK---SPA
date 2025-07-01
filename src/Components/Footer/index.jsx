@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <FooterHome>
       <p>
-        WPP NEWS <strong> NET WORK</strong> | Feito por William - Patrícia e Pedro.
+        WPP NEWS <strong> NET WORK</strong> | Feito com Carinho - William Mota
       </p>
     </FooterHome>
   );

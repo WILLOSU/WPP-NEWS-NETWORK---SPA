@@ -1,30 +1,40 @@
-"use client"
+"use client";
 
-import { Edit, MessageCircle, MoreVertical, ThumbsUp, Trash, EyeOff, Send, Clock, Eye } from "lucide-react"
+import {
+  Edit,
+  MessageCircle,
+  MoreVertical,
+  ThumbsUp,
+  Trash,
+  EyeOff,
+  Send,
+  Clock,
+  Eye,
+} from "lucide-react";
 
-import { useMemo, useState } from "react"
+import { useMemo, useState } from "react";
 
-import { Toaster, toast } from "react-hot-toast"
+import { Toaster, toast } from "react-hot-toast";
 
-import { formatData } from "../../Services/formatDate"
+import { formatData } from "../../Services/formatDate";
 
-import { initialName } from "../../Services/initialName"
+import { initialName } from "../../Services/initialName";
 
-import { likeTheNewsService } from "../../Services/postsServices"
+import { likeTheNewsService } from "../../Services/postsServices";
 
-import { Comments } from "../Commets"
+import { Comments } from "../Commets";
 
-import { DeleteNews } from "../DeleteNews/index"
+import { DeleteNews } from "../DeleteNews/index";
 
-import { EditNews } from "../EditNews/index"
+import { EditNews } from "../EditNews/index";
 
-import { InactiveNews } from "../InactiveNews/index"
+import { InactiveNews } from "../InactiveNews/index";
 
-import { PublishNews } from "../PublishNews/index"
+import { PublishNews } from "../PublishNews/index";
 
-import { useAuth } from "../../Context/authContext"
+import { useAuth } from "../../Context/authContext";
 
-import * as S from "./styles"
+import * as S from "./styles";
 
 export function Card({ news }) {
   const [open, setOpen] = useState({
@@ -33,27 +43,27 @@ export function Card({ news }) {
     doComments: false,
     inactive: false,
     published: false,
-  })
+  });
 
-  const [openOptions, setOpenOptions] = useState(false)
+  const [openOptions, setOpenOptions] = useState(false);
 
-  const [likes, setLikes] = useState(news.likes || [])
+  const [likes, setLikes] = useState(news.likes || []);
 
-  const [comment, setComment] = useState(news.comments || [])
+  const [comment, setComment] = useState(news.comments || []);
 
-  const { user, token } = useAuth()
+  const { user, token } = useAuth();
 
   const liked = useMemo(() => {
-    return likes.some((item) => item.userId === user?._id)
-  }, [likes])
+    return likes.some((item) => item.userId === user?._id);
+  }, [likes]);
 
   const commented = useMemo(() => {
-    return comment.some((item) => item.userId === user?._id)
-  }, [comment])
+    return comment.some((item) => item.userId === user?._id);
+  }, [comment]);
 
   // Função para renderizar o status da notícia
   const renderStatusBadge = () => {
-    if (!news.status || news.status === "published") return null
+    if (!news.status || news.status === "published") return null;
 
     const statusConfig = {
       pending: {
@@ -74,10 +84,10 @@ export function Card({ news }) {
         color: "#dc2626", // vermelho
         bgColor: "#fee2e2",
       },
-    }
+    };
 
-    const config = statusConfig[news.status]
-    if (!config) return null
+    const config = statusConfig[news.status];
+    if (!config) return null;
 
     return (
       <div
@@ -98,8 +108,8 @@ export function Card({ news }) {
         {config.icon}
         {config.text}
       </div>
-    )
-  }
+    );
+  };
 
   async function doLikeNews() {
     if (!token) {
@@ -109,40 +119,40 @@ export function Card({ news }) {
           backgroundColor: "rgb(6, 72, 158)",
           color: "#fff",
         },
-      })
+      });
     }
 
-    const userLiked = likes.some((like) => like.userId === user?._id)
+    const userLiked = likes.some((like) => like.userId === user?._id);
 
     !userLiked
       ? setLikes([...likes, { userId: user?._id }])
-      : setLikes(likes.filter((like) => like.userId !== user?._id))
+      : setLikes(likes.filter((like) => like.userId !== user?._id));
 
-    const newsId = news.id
+    const newsId = news.id;
 
-    await likeTheNewsService(newsId, token)
+    await likeTheNewsService(newsId, token);
   }
 
-  const { updated, deleted, doComments, inactive, published } = open
+  const { updated, deleted, doComments, inactive, published } = open;
 
   if (updated) {
-    return <EditNews news={news} open={open} setOpen={setOpen} />
+    return <EditNews news={news} open={open} setOpen={setOpen} />;
   }
 
   if (deleted) {
-    return <DeleteNews news={news} open={open} setOpen={setOpen} />
+    return <DeleteNews news={news} open={open} setOpen={setOpen} />;
   }
 
   if (doComments) {
-    return <Comments news={news} open={open.doComments} setOpen={setOpen} />
+    return <Comments news={news} open={open.doComments} setOpen={setOpen} />;
   }
 
   if (inactive) {
-    return <InactiveNews news={news} open={open.inactive} setOpen={setOpen} />
+    return <InactiveNews news={news} open={open.inactive} setOpen={setOpen} />;
   }
 
   if (published) {
-    return <PublishNews news={news} open={open.published} setOpen={setOpen} />
+    return <PublishNews news={news} open={open.published} setOpen={setOpen} />;
   }
 
   return (
@@ -154,7 +164,9 @@ export function Card({ news }) {
           {news?.userAvatar ? (
             <S.ProfileImage src={news?.userAvatar} />
           ) : (
-            <S.ProfileWithoutImage>{initialName(news.name)}</S.ProfileWithoutImage>
+            <S.ProfileWithoutImage>
+              {initialName(news.name)}
+            </S.ProfileWithoutImage>
           )}
 
           <div>
@@ -201,7 +213,11 @@ export function Card({ news }) {
 
       <S.CardFooter>
         <S.ButtonLike onClick={doLikeNews}>
-          {liked ? <ThumbsUp color="#003479" fill="#004AAD" size={18} /> : <ThumbsUp color="#757575" size={18} />}
+          {liked ? (
+            <ThumbsUp color="#003479" fill="#004AAD" size={18} />
+          ) : (
+            <ThumbsUp color="#757575" size={18} />
+          )}
           <span>{likes.length}</span>
         </S.ButtonLike>
 
@@ -215,5 +231,5 @@ export function Card({ news }) {
         </button>
       </S.CardFooter>
     </S.CardContainer>
-  )
+  );
 }

@@ -1,53 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Toaster, toast } from "react-hot-toast"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "../../Context/authContext"
-import { publishNewsService } from "../../Services/postsServices"
-import { PublishModal } from "../PublishModal"
-import { Modal } from "../Modal"
+import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Context/authContext";
+import { publishNewsService } from "../../Services/postsServices";
+import { PublishModal } from "../PublishModal";
+import { Modal } from "../Modal";
 
 export function PublishNews({ news, open, setOpen }) {
-  const [loading, setLoading] = useState(false)
-  const { token } = useAuth()
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
   async function publishNew(e) {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      console.log("DEBUG PublishNews - Iniciando publicação")
-      console.log("DEBUG PublishNews - news.id:", news.id)
-
-      const newsID = news.id
-      const response = await publishNewsService(newsID, token)
-
-      console.log("DEBUG PublishNews - Response status:", response.status)
+      const newsID = news.id;
+      const response = await publishNewsService(newsID, token);
 
       if (!response.ok) {
-        const errorData = await response.json()
-        console.error("DEBUG PublishNews - Erro da resposta:", errorData)
-        toast.error(`Erro ao publicar notícia: ${errorData.message || "Erro desconhecido"}`)
-        return
+        const errorData = await response.json();
+
+        toast.error(
+          `Erro ao publicar notícia: ${
+            errorData.message || "Erro desconhecido"
+          }`
+        );
+        return;
       }
 
-      const data = await response.json()
-      console.log("DEBUG PublishNews - Sucesso:", data)
+      const data = await response.json();
 
-      toast.success("Notícia publicada com sucesso!")
-      setOpen({ published: false })
+      toast.success("Notícia publicada com sucesso!");
+      setOpen({ published: false });
 
       // Recarregar a página após 1 segundo
       setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+        window.location.reload();
+      }, 1000);
     } catch (error) {
-      console.error("DEBUG PublishNews - Erro geral:", error)
-      toast.error("Erro ao publicar notícia. Verifique o console.")
+      toast.error("Erro ao publicar notícia. Verifique o console.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -66,5 +63,5 @@ export function PublishNews({ news, open, setOpen }) {
         </Modal>
       ) : null}
     </>
-  )
+  );
 }
