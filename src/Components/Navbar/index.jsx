@@ -1,12 +1,12 @@
+
 import debounce from "lodash.debounce";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useSearch } from "../../Context/searchContext";
 import { Logo } from "../Logo/index";
 
 import { Menu } from "lucide-react";
-import { useState } from "react";
 import { useAuth } from "../../Context/authContext";
 import { Button } from "../Button";
 import { ButtonProfile } from "../ButtonProfile";
@@ -16,7 +16,7 @@ import * as S from "./styles";
 
 export function Navbar() {
   const { setInputSearch } = useSearch();
-  const { user, signOut } = useAuth();
+  const { user, signOut } = useAuth(); // Desestruturando user e signOut do useAuth
   const navigate = useNavigate();
 
   const [openMenu, setOpenMenu] = useState(false);
@@ -53,11 +53,15 @@ export function Navbar() {
         <Logo small />
 
         {user ? (
-          <ButtonProfile
-            username={user.name}
-            handleProfile={moveToProfile}
-            handleGoOut={signOut}
-          />
+          <>
+            <ButtonProfile
+              username={user.name}
+              handleProfile={moveToProfile}
+              handleGoOut={signOut}
+            />
+
+
+          </>
         ) : (
           <Link to="/login">
             <Button>Entrar</Button>

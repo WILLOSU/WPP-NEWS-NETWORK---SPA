@@ -1,97 +1,80 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import logo from "../../images/LogoWPP4.png";
+import debounce from "lodash.debounce";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import {
-  ErrorSpan,
-  ImageLogo,
-  InputSpace,
-  Nav,
-  UserLoggedSpace,
-} from "./NavbarStyled";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../Button/Button";
-import { searchSchema } from "../../schemas/searchSchema";
-import { userLogged } from "../../services/userServices";
-import { useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { UserContext } from "../../Context/UserContext";
+import { useSearch } from "../../Context/searchContext";
+import { Logo } from "../Logo/index";
+
+import { Menu } from "lucide-react";
+import { useAuth } from "../../Context/authContext";
+import { Button } from "../Button";
+import { ButtonProfile } from "../ButtonProfile";
+import { NavMobile } from "../NavMobile";
+import { SearchNav } from "../Search";
+import * as S from "./styles";
 
 export function Navbar() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(searchSchema),
-  });
+  const { setInputSearch } = useSearch();
+  const { user, signOut } = useAuth(); // Desestruturando user e signOut do useAuth
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext);
 
-  function onSearch(data) {
-    const { title } = data;
-    navigate(`/search/${title}`);
-    reset();
-  }
-  async function findUserLogged() {
-    try {
-      const response = await userLogged();
-      setUser(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const [openMenu, setOpenMenu] = useState(false);
 
-  function signout() {
-    Cookies.remove("token");
-    setUser(undefined);
-    navigate("/");
-  }
+  const handleInputSearch = (e) => {
+    setInputSearch(e.target.value);
+    navigate("/search");
+  };
+
+  const debounceInputHandleChange = useCallback(
+    debounce(handleInputSearch, 1000),
+    []
+  );
 
   useEffect(() => {
-    if (Cookies.get("token")) findUserLogged();
+    return () => {
+      debounceInputHandleChange.cancel();
+    };
   }, []);
+
+  function moveToProfile() {
+    navigate(`/profile`);
+  }
 
   return (
     <>
-      <Nav>
-        <form onSubmit={handleSubmit(onSearch)}>
-          <InputSpace>
-            <button type="submit">
-              <i className="bi bi-search"></i> 
-            </button>
+      <SearchNav onChange={debounceInputHandleChange} />
 
-            <input
-              {...register("title")}
-              type="text"
-              placeholder="Pesquise por um título"
-            />
-          </InputSpace>
-        </form>
+      <S.Wrapper>
+        <S.ContainerSearch>
+          <SearchNav onChange={debounceInputHandleChange} />
+        </S.ContainerSearch>
 
-        <Link to="/">
-          <ImageLogo src={logo} alt="Logo WPP NEWS" />
-        </Link>
+        <Logo small />
 
         {user ? (
-          <UserLoggedSpace>
-            <Link to="/profile" style={{textDecoration: 'none'}}>
-              <h2>{user.name}</h2>
-            </Link>
+          <>
+            <ButtonProfile
+              username={user.name}
+              handleProfile={moveToProfile}
+              handleGoOut={signOut}
+            />
 
-            <i className="bi bi-box-arrow-right" onClick={signout}></i>
-          </UserLoggedSpace>
+            {user.role === "admin" && (
+              <Link to="/admin-panel" style={{ textDecoration: "none" }}>
+                <Button type="button">Admin</Button>
+              </Link>
+            )}
+          </>
         ) : (
-          <Link to="/auth">
-            <Button type="button" text="Entrar">
-              Entrar
-            </Button>
+          <Link to="/login">
+            <Button>Entrar</Button>
           </Link>
         )}
-      </Nav>
-      {errors.title && <ErrorSpan>{errors.title.message}</ErrorSpan>}
-      <Outlet />
+      </S.Wrapper>
+      <S.BtnOpenMenu onClick={() => setOpenMenu(!openMenu)}>
+        <Menu className="openMenu" />
+      </S.BtnOpenMenu>
+      {openMenu && <NavMobile openMenu={openMenu} setOpenMenu={setOpenMenu} />}
     </>
   );
 }

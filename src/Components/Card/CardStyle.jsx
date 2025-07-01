@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 import { isUserLoggedIn } from '../../Utils/Utils';
 
@@ -96,7 +95,3 @@ export const CardFooter = styled.article`
     gap: 0.2rem;
   }
 `;
-
-
-
-

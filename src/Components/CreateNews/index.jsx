@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { createNewNewsService } from "../../Services/postsServices";
+
 import { Button } from "../Button";
 import { ErrorMessage } from "../ErrorMessage";
 import { Form } from "../Form";
@@ -21,12 +22,11 @@ export function CreateNews({ open, setOpen }) {
     text: "",
   });
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const navigate = useNavigate();
 
   function handleInputChange(e) {
     const { name, value } = e.target;
-
     setNewNews({ ...newNews, [name]: value });
   }
 
@@ -35,21 +35,38 @@ export function CreateNews({ open, setOpen }) {
 
     const { title, text } = newNews;
 
-    if (!title && !text) {
-      setErrorMessage("Preencha os campos");
+    if (!title || !text) {
+      setErrorMessage("Por favor, preencha o título e o texto da notícia.");
       return;
     }
 
     setLoading(true);
+    setErrorMessage("");
+
+    let newsDataToSend = { ...newNews };
+    if (user && user.role === "admin") {
+      newsDataToSend.status = "published";
+    }
+
     try {
-      const response = await createNewNewsService(token, newNews);
+      const response = await createNewNewsService(token, newsDataToSend);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(
+          errorData.message || "Erro ao criar notícia. Tente novamente."
+        );
+        return;
+      }
+
       await response.json();
 
       setLoading(false);
       setOpen(false);
       navigate("/profile");
     } catch (error) {
-      console.log({ error });
+      console.error("Erro ao criar notícia:", error);
+      setErrorMessage("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -68,24 +85,20 @@ export function CreateNews({ open, setOpen }) {
               onChange={handleInputChange}
             />
 
-            
             <Input
               icon={<Link />}
               type="text"
-              placeholder="Banner"
+              placeholder="Banner (URL da imagem)"
               name="banner"
               onChange={handleInputChange}
             />
-
-             
 
             <S.TextArea
               name="text"
               cols="40"
               rows="5"
-              placeholder="Texto"
+              placeholder="Conteúdo da notícia"
               onChange={handleInputChange}
-              
             />
             <ErrorMessage>{errorMessage}</ErrorMessage>
             <Button onClick={createNewNews}>

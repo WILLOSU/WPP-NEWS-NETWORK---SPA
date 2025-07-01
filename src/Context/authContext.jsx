@@ -1,42 +1,69 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUserService } from "../Services/userServices";
+"use client"
 
-const routeAuth = "https://wpp-news-network-api.onrender.com";
-const AuthContext = createContext();
+import { createContext, useContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { getUserService } from "../Services/userServices"
+
+const routeAuth = "https://wpp-news-network-api.onrender.com"
+
+const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState();
-  const [user, setUser] = useState();
-  const [messageError, setMessageError] = useState();
+  const [token, setToken] = useState(null)
+  const [user, setUser] = useState(null)
+  const [messageError, setMessageError] = useState(null)
 
-  const navigate = useNavigate();
-
-  // pegar o token do localstorage
-  // se tiver token, pegar os dados do usuário na api
-  // se não tiver token, redirecionar para a rota de login
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const userLog = JSON.parse(localStorage.getItem("localStorage"));
+    const userLog = JSON.parse(localStorage.getItem("localStorage"))
 
-    if (userLog?.token) {
+    // Adicione estes logs para debug
+    console.log("DEBUG - userLog do localStorage:", userLog)
+    console.log("DEBUG - userLog.role:", userLog?.role)
+
+    if (userLog?.token && userLog?.id) {
       const getUser = async () => {
         try {
-          const response = await getUserService(userLog?.id);
-          const user = await response.json();
-          setUser(user);
-          setToken(userLog.token);
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
-      getUser();
-    }
+          const response = await getUserService(userLog.id, userLog.token)
 
-    if (!userLog?.token) {
-      return navigate("/");
+          if (!response.ok) {
+            const errorData = await response.json()
+            console.error(
+              "DEBUG: Erro ao buscar usuário no useEffect (API response não ok):",
+              errorData.message || response.statusText,
+            )
+            throw new Error(errorData.message || "Falha na autenticação ao buscar usuário.")
+          }
+
+          const userData = await response.json()
+
+          // Adicione estes logs para debug
+          console.log("DEBUG - userData da API:", userData)
+          console.log("DEBUG - userLog.role antes de adicionar:", userLog.role)
+
+          const userWithRole = {
+            ...userData,
+            role: userLog.role,
+          }
+
+          console.log("DEBUG - userWithRole final:", userWithRole)
+
+          setUser(userWithRole) // ← Use userWithRole ao invés de userData
+          setToken(userLog.token)
+          setMessageError(null)
+        } catch (error) {
+          console.error("DEBUG: Erro no useEffect do AuthContext (catch):", error.message)
+          setMessageError("Sua sessão expirou ou é inválida. Faça o Login novamente!")
+          signOut()
+        }
+      }
+
+      getUser()
+    } else {
+      signOut()
     }
-  }, []);
+  }, [])
 
   async function signIn(userLogin) {
     try {
@@ -46,45 +73,48 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userLogin),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
-      if (data.message === "User or password not found") {
-        setMessageError("E-mail ou senha incorretos, tente novamente.");
-        return;
+      if (!response.ok) {
+        setMessageError(data.message || "Erro desconhecido no login.")
+        return
       }
 
-      const { token: _token, user: _user } = data;
+      const { token: _token, user: _user } = data
 
       const _localStorage = {
         token: _token,
         id: _user.id,
-      };
-
-      const _localStorageString = JSON.stringify(_localStorage);
-
-      if (_token) {
-        localStorage.setItem("localStorage", _localStorageString);
-        setToken(() => _token);
-        setUser(() => _user);
-
-        return _user;
+        role: _user.role,
       }
+
+      const _localStorageString = JSON.stringify(_localStorage)
+
+      localStorage.setItem("localStorage", _localStorageString)
+
+      setToken(_token)
+      setUser(_user)
+      setMessageError(null)
+
+      return _user
     } catch (error) {
-      console.log(error.message);
+      setMessageError("Ocorreu um erro ao tentar fazer login. Tente novamente.")
     }
   }
 
   function signOut() {
-    localStorage.clear(token);
-    setUser("");
-    navigate("/");
-    return;
+    localStorage.removeItem("localStorage")
+    setToken(null)
+    setUser(null)
+    setMessageError(null)
+    navigate("/")
+    console.log("DEBUG: Logout realizado.")
   }
 
   function isAuthenticated() {
-    return !!token;
+    return !!token && !!user
   }
 
   return (
@@ -101,14 +131,13 @@ export const AuthProvider = ({ children }) => {
     >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-
+  const context = useContext(AuthContext)
   if (!context) {
-    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+    throw new Error("useAuth deve ser usado dentro de um AuthProvider")
   }
-  return context;
-};
+  return context
+}
