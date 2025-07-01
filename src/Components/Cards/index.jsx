@@ -1,6 +1,6 @@
 "use client"
 
-import { Edit, MessageCircle, MoreVertical, ThumbsUp, Trash, EyeOff, Send } from "lucide-react"
+import { Edit, MessageCircle, MoreVertical, ThumbsUp, Trash, EyeOff, Send, Clock, Eye } from "lucide-react"
 
 import { useMemo, useState } from "react"
 
@@ -50,6 +50,56 @@ export function Card({ news }) {
   const commented = useMemo(() => {
     return comment.some((item) => item.userId === user?._id)
   }, [comment])
+
+  // Função para renderizar o status da notícia
+  const renderStatusBadge = () => {
+    if (!news.status || news.status === "published") return null
+
+    const statusConfig = {
+      pending: {
+        icon: <Clock size={14} />,
+        text: "Aguardando aprovação",
+        color: "#f59e0b", // amarelo
+        bgColor: "#fef3c7",
+      },
+      inactive: {
+        icon: <EyeOff size={14} />,
+        text: "Inativa",
+        color: "#6b7280", // cinza
+        bgColor: "#f3f4f6",
+      },
+      rejected: {
+        icon: <Eye size={14} />,
+        text: "Rejeitada",
+        color: "#dc2626", // vermelho
+        bgColor: "#fee2e2",
+      },
+    }
+
+    const config = statusConfig[news.status]
+    if (!config) return null
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          padding: "4px 8px",
+          borderRadius: "12px",
+          fontSize: "12px",
+          fontWeight: "500",
+          color: config.color,
+          backgroundColor: config.bgColor,
+          border: `1px solid ${config.color}20`,
+          marginBottom: "8px",
+        }}
+      >
+        {config.icon}
+        {config.text}
+      </div>
+    )
+  }
 
   async function doLikeNews() {
     if (!token) {
@@ -140,6 +190,7 @@ export function Card({ news }) {
       </S.ContainerProfile>
 
       <S.CardBody>
+        {renderStatusBadge()}
         <S.Text>
           <h2>{news?.title}</h2>
           <p>{news?.text}</p>
