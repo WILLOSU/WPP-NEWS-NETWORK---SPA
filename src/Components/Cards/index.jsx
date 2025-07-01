@@ -43,10 +43,6 @@ export function Card({ news }) {
 
   const { user, token } = useAuth()
 
-  // Adicione esta linha temporariamente para debug
-  console.log("User completo:", user)
-  console.log("User role:", user?.role)
-
   const liked = useMemo(() => {
     return likes.some((item) => item.userId === user?._id)
   }, [likes])
@@ -128,17 +124,16 @@ export function Card({ news }) {
                 <Trash size={18} />
               </S.BottonNav>
 
-              {/* Comente esta linha temporariamente: */}
-              {/* {user?.role === "admin" && ( */}
-              <>
-                <S.BottonNav onClick={() => setOpen({ inactive: true })}>
-                  <EyeOff size={18} />
-                </S.BottonNav>
-                <S.BottonNav onClick={() => setOpen({ published: true })}>
-                  <Send size={18} />
-                </S.BottonNav>
-              </>
-              {/* )} */}
+              {user?.role === "admin" && (
+                <>
+                  <S.BottonNav onClick={() => setOpen({ inactive: true })}>
+                    <EyeOff size={18} />
+                  </S.BottonNav>
+                  <S.BottonNav onClick={() => setOpen({ published: true })}>
+                    <Send size={18} />
+                  </S.BottonNav>
+                </>
+              )}
             </S.NavCard>
           </S.ButtonMenuCard>
         )}
